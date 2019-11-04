@@ -58,7 +58,6 @@
       } else {
           console.log("You don't know how to play Jokenpo!");
           console.log("Let's try again! Shall we?");
-          i = 0;
           game();
       }
       const computerSelection = computerPlay();
@@ -86,7 +85,11 @@
     }
     // Best of 5 game
     function game() {
-      console.log("-----------------------------------\n" + "Let's play Jokenpo!\nWhoever wins a 5 round game wins!\n" + "-----------------------------------\n");
+      if (i == 0) {
+        console.log("-----------------------------------\n" + "Let's play Jokenpo!\nWhoever wins a 5 round game wins!\n" + "-----------------------------------\n");
+      } else {
+        console.log("-----------------------------------\n" + "Let's continue our game!\nBut this time choose rock, paper or scissors!\n" + "-----------------------------------\n");
+      }
       while (i < 5) {
         playRound();
         console.log("-----------------------------------");
