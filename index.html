@@ -57,8 +57,9 @@
         console.log("You play " + playerSelection + "!");
       } else {
           console.log("You don't know how to play Jokenpo!");
-          i = 5;
-          return;
+          console.log("Let's try again! Shall we?");
+          i = 0;
+          game();
       }
       const computerSelection = computerPlay();
       if (playerSelection == "rock" && computerSelection == "rock") {
