@@ -2,31 +2,96 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Skeleton HTML for Javascript practice</title>
+  <title>Jokenpo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h1>Jokenpo</h1>
+  <div id="container"></div>
+  <div class="choices">
+    <div id="rock">Rock</div>
+    <div id="paper">Paper</div>
+    <div id="scissors">Scissors</div>
+  </div>
+  <div id="container2">
+    <h2 id="score"></h2>
+  </div>
   
   <script>
     // Global variables
     let playerScore = 0;
     let computerScore = 0;
+    let playerSelection = 0;
     let i = 0;
+    let isPlaying = false;
 
-    // Function that declares the player lost the round
-    function playerLosesRound() {
-      console.log("You lost this round!");
-      computerScore++;
+    const rock = document.querySelector('#rock');
+    const paper = document.querySelector('#paper');
+    const scissors = document.querySelector('#scissors');
+
+    rock.addEventListener('click', clickButton);
+    rock.addEventListener('click', playedRock);
+    rock.addEventListener('transitionend', removeTransition);
+    paper.addEventListener('click', clickButton);
+    paper.addEventListener('click', playedPaper);
+    paper.addEventListener('transitionend', removeTransition);
+    scissors.addEventListener('click', clickButton);
+    scissors.addEventListener('click', playedScissors);
+    scissors.addEventListener('transitionend', removeTransition);
+
+    function removeTransition(e) {
+      if (e.propertyName !== 'transform') return;
+      this.classList.remove('clicked');
     }
 
-    // Function that declares the player lost the round
-    function playerWinsRound() {
-      console.log("You win this round!");
-      playerScore++;
+    const container = document.querySelector('#container');
+    const content = document.createElement('h2');
+    content.textContent = 'Let\'s play Jokenpo! The best of five wins! Choose one below:';
+    container.appendChild(content);
+
+    function playedRock() {
+      if (isPlaying === false) {
+        playerSelection = "rock";
+        content.textContent = 'You played rock!';
+        setTimeout(playGame, 1000);
+      }
     }
 
-    // Function that declares a draw
-    function roundDraw() {
-      console.log("It's a draw!");
+    function playedPaper(e) {
+      if (isPlaying === false) {
+        playerSelection = "paper";
+        content.textContent = 'You played paper!';
+        setTimeout(playGame, 1000);
+      }
+    }
+
+    function playedScissors(e) {
+      if (isPlaying === false) {
+        playerSelection = "scissors";
+        content.textContent = 'You played scissors!';
+        setTimeout(playGame, 1000);
+      }
+    }
+
+    function clickButton() {
+      if (isPlaying === false) {
+        this.classList.add('clicked');
+        if (i > 0 && i < 5) {
+          updateScore();
+        } else if (i > 4) {
+          restartGame();
+        }
+      }
+    }
+
+    function playGame() {
+      isPlaying = true;
+      setTimeout(computerChoosing, 1000);
+    }
+
+    function computerChoosing() {
+      content.textContent = '...';
+      setTimeout(computerPlay, 1000);
     }
 
     // Computer picks a random choice
@@ -34,33 +99,26 @@
       const randomPlay = Math.round(Math.random() * 2);
       switch (randomPlay) {
           case 0:
-              console.log("Computer plays rock!");
-              return "rock";
+              content.textContent = 'Computer plays rock!';
+              computerSelection = "rock";
+              setTimeout(playRound, 1000);
               break;
           case 1:
-              console.log("Computer plays paper!")
-              return "paper";
+              content.textContent = 'Computer plays paper!';
+              computerSelection = "paper";
+              setTimeout(playRound, 1000);
               break;
           case 2:
-              console.log("Computer plays scissors!")
-              return "scissors";
+              content.textContent = 'Computer plays scissors!';
+              computerSelection = "scissors";
+              setTimeout(playRound, 1000);
               break;
       }
     }
 
     // Function to play a single round
     function playRound() {
-      let playerSelection = prompt("Choose rock, paper or scissors.");
-      playerSelection = playerSelection.toLowerCase();
-      // Should only proceed if the player writes a correct input
-      if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
-        console.log("You play " + playerSelection + "!");
-      } else {
-          console.log("You don't know how to play Jokenpo!");
-          console.log("Let's try again! Shall we?");
-          game();
-      }
-      const computerSelection = computerPlay();
+      content.textContent = '...';
       if (playerSelection == "rock" && computerSelection == "rock") {
         roundDraw();
       } else if (playerSelection == "rock" && computerSelection == "paper") {
@@ -83,30 +141,63 @@
           roundDraw();
       }
     }
-    // Best of 5 game
-    function game() {
-      if (i == 0) {
-        console.log("-----------------------------------\n" + "Let's play Jokenpo!\nWhoever wins a 5 round game wins!\n" + "-----------------------------------\n");
-      } else {
-        console.log("-----------------------------------\n" + "Let's continue our game!\nBut this time choose rock, paper or scissors!\n" + "-----------------------------------\n");
-      }
-      while (i < 5) {
-        playRound();
-        console.log("-----------------------------------");
-        i++;
-      }
-      if (i == 5) {
-        console.log("Final score:\n" + "(You) " + playerScore + " x " + computerScore + " (Computer)");
-        if (playerScore > computerScore) {
-          console.log("You win the game!");
-        } else if (playerScore == computerScore) {
-          console.log("It's a tie!");
-        } else {
-          console.log("You lose the game!");
-        }
+
+    // Function that declares the player lost the round
+    function playerLosesRound() {
+      content.textContent = 'You lost this round!';
+      computerScore++;
+      i++;
+      if (i < 6) {
+        updateScore();
       }
     }
-    game();
+
+    // Function that declares the player lost the round
+    function playerWinsRound() {
+      content.textContent = 'You win this round!';
+      playerScore++;
+      i++;
+      if (i < 6) {
+        updateScore();
+      }
+    }
+
+    // Function that declares a draw
+    function roundDraw() {
+      content.textContent = 'It\'s a draw!';
+      i++;
+      if (i < 6) {
+        updateScore();
+      }
+    }
+
+    function updateScore() {
+      document.getElementById('score').innerHTML = "Round " + i + "\n\n" + "(You) " + playerScore + " x " + computerScore + " (Computer)";
+      if (i > 4) {
+          setTimeout(finishGame, 3000);
+      }
+      isPlaying = false;
+    }
+
+    function finishGame() {
+      score.textContent = '';
+      if (playerScore > computerScore) {
+        content.textContent = 'You win the game!';
+      } else if (restartGame == computerScore) {
+        content.textContent = 'It\'s a tie!';
+      } else {
+        content.textContent = 'You lose the game!';
+      }
+    }
+
+    function restartGame() {
+      playerScore = 0;
+      computerScore = 0;
+      playerSelection = 0;
+      i = 0;
+      content.textContent = 'Let\'s play Jokenpo! The best of five wins! Choose one below:';
+      score.textContent = '';
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Skeleton HTML for Javascript practice</title>
+</head>
+<body>
+  
+  <script>
+    // Global variables
+    let playerScore = 0;
+    let computerScore = 0;
+    let i = 0;
+
+    // Function that declares the player lost the round
+    function playerLosesRound() {
+      console.log("You lost this round!");
+      computerScore++;
+    }
+
+    // Function that declares the player lost the round
+    function playerWinsRound() {
+      console.log("You win this round!");
+      playerScore++;
+    }
+
+    // Function that declares a draw
+    function roundDraw() {
+      console.log("It's a draw!");
+    }
+
+    // Computer picks a random choice
+    function computerPlay() {
+      const randomPlay = Math.round(Math.random() * 2);
+      switch (randomPlay) {
+          case 0:
+              console.log("Computer plays rock!");
+              return "rock";
+              break;
+          case 1:
+              console.log("Computer plays paper!")
+              return "paper";
+              break;
+          case 2:
+              console.log("Computer plays scissors!")
+              return "scissors";
+              break;
+      }
+    }
+
+    // Function to play a single round
+    function playRound() {
+      let playerSelection = prompt("Choose rock, paper or scissors.");
+      playerSelection = playerSelection.toLowerCase();
+      // Should only proceed if the player writes a correct input
+      if (playerSelection == "rock" || playerSelection == "paper" || playerSelection == "scissors") {
+        console.log("You play " + playerSelection + "!");
+      } else {
+          console.log("You don't know how to play Jokenpo!");
+          console.log("Let's try again! Shall we?");
+          game();
+      }
+      const computerSelection = computerPlay();
+      if (playerSelection == "rock" && computerSelection == "rock") {
+        roundDraw();
+      } else if (playerSelection == "rock" && computerSelection == "paper") {
+          playerLosesRound();
+      } else if (playerSelection == "rock" && computerSelection == "scissors") {
+          playerWinsRound();
+      }
+      if (playerSelection == "paper" && computerSelection == "rock") {
+          playerWinsRound();
+      } else if (playerSelection == "paper" && computerSelection == "paper") {
+          roundDraw();
+      } else if (playerSelection == "paper" && computerSelection == "scissors") {
+          playerLosesRound();
+      }
+      if (playerSelection == "scissors" && computerSelection == "rock") {
+          playerLosesRound();
+      } else if (playerSelection == "scissors" && computerSelection == "paper") {
+          playerWinsRound();
+      } else if (playerSelection == "scissors" && computerSelection == "scissors") {
+          roundDraw();
+      }
+    }
+    // Best of 5 game
+    function game() {
+      if (i == 0) {
+        console.log("-----------------------------------\n" + "Let's play Jokenpo!\nWhoever wins a 5 round game wins!\n" + "-----------------------------------\n");
+      } else {
+        console.log("-----------------------------------\n" + "Let's continue our game!\nBut this time choose rock, paper or scissors!\n" + "-----------------------------------\n");
+      }
+      while (i < 5) {
+        playRound();
+        console.log("-----------------------------------");
+        i++;
+      }
+      if (i == 5) {
+        console.log("Final score:\n" + "(You) " + playerScore + " x " + computerScore + " (Computer)");
+        if (playerScore > computerScore) {
+          console.log("You win the game!");
+        } else if (playerScore == computerScore) {
+          console.log("It's a tie!");
+        } else {
+          console.log("You lose the game!");
+        }
+      }
+    }
+    game();
+  </script>
+</body>
+</html>
